@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="text-align: center; padding: 4rem 1rem;">
+    <h1 style="font-size: 3rem; margin-bottom: 1rem; color: #1a73e8;">404 - File Not Found</h1>
+    <p style="font-size: 1.2rem; color: #666; margin-bottom: 2rem;">
+        Sorry, the page you’re looking for doesn’t exist.
+    </p>
+    <a href="{{ url_for('index') }}"
+       style="padding: 10px 20px; background-color: #1a73e8; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+        ⬅️ Back to Home
+    </a>
+</div>
+{% endblock %}

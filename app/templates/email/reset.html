@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Center the form vertically and horizontally -->
+<div style="
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+">
+    <!-- Card container -->
+    <div style="
+        max-width: 420px;
+        width: 100%;
+        background-color: #ffffff;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    ">
+        <h1 style="
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #333;
+        ">
+            🔐 Set New Password
+        </h1>
+
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <!-- Password -->
+            <div style="margin-bottom: 1.25rem;">
+                <label for="{{ form.password.id }}" style="
+                    display: block;
+                    font-weight: 600;
+                    margin-bottom: 0.5rem;
+                    color: #444;
+                ">
+                    {{ form.password.label.text }}
+                </label>
+                {{ form.password(
+                    size=32,
+                    class_="form-control",
+                    style="width: 100%; padding: 0.75rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 8px;"
+                ) }}
+                {% for error in form.password.errors %}
+                    <div style="color: red; font-size: 0.875rem;">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <!-- Confirm Password -->
+            <div style="margin-bottom: 1.25rem;">
+                <label for="{{ form.password2.id }}" style="
+                    display: block;
+                    font-weight: 600;
+                    margin-bottom: 0.5rem;
+                    color: #444;
+                ">
+                    {{ form.password2.label.text }}
+                </label>
+                {{ form.password2(
+                    size=32,
+                    class_="form-control",
+                    style="width: 100%; padding: 0.75rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 8px;"
+                ) }}
+                {% for error in form.password2.errors %}
+                    <div style="color: red; font-size: 0.875rem;">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <!-- Submit Button -->
+            <div>
+                {{ form.submit(
+                    class_="btn btn-primary",
+                    style="width: 100%; padding: 0.75rem; font-size: 1rem; font-weight: 600; border-radius: 8px;"
+                ) }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Home - My Blog{% endblock %}
+{% block content %}
+<div class="container" style="max-width: 750px;">
+
+    <!-- Welcome Message -->
+    <h1 class="text-center fw-semibold mb-5" style="color: #2c3e50;">
+        👋 Welcome back, {{ current_user.username }}!
+    </h1>
+
+    <!-- New Post Section -->
+    {% if form %}
+    <div class="p-4 mb-5 rounded-4 shadow-sm" style="background: linear-gradient(to right, #f9f9f9, #ffffff);">
+        <h2 class="h5 text-primary mb-4">✏️ Create a New Post</h2>
+        <form method="post">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.post.label(class="form-label fw-semibold text-dark") }}
+                {{ form.post(class="form-control", rows=4) }}
+            </div>
+            <div>
+                {{ form.submit(class="btn btn-primary fw-semibold px-4") }}
+            </div>
+        </form>
+    </div>
+    {% endif %}
+
+    <!-- Posts Feed -->
+    {% if posts %}
+        {% for post in posts %}
+            {% include '_post.html' %}
+        {% endfor %}
+
+        {% if prev_url or next_url %}
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            {% if prev_url %}
+                <a href="{{ prev_url }}" class="btn btn-outline-secondary btn-sm">← Newer Posts</a>
+            {% endif %}
+            {% if next_url %}
+                <a href="{{ next_url }}" class="btn btn-outline-secondary btn-sm">Older Posts →</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% else %}
+        <p class="text-center text-muted fst-italic mt-4">No posts yet. Start the conversation!</p>
+    {% endif %}
+</div>
+{% endblock %}

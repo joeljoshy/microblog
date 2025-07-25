@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div style="
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px);  /* Adjust based on your navbar height */
+    padding-top: 56px;
+    background-color: #f8f9fa;
+">
+    <form method="post" novalidate style="
+        background: #fff;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        max-width: 400px;
+        width: 100%;
+    ">
+        <h2 style="text-align: center; margin-bottom: 1.5rem;">Welcome Back</h2>
+
+        {{ form.hidden_tag() }}
+
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">{{ form.email.label }}</label>
+            {{ form.email(class_="form-input", style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #ccc;") }}
+            {% for error in form.email.errors %}
+                <small style="color: red;">{{ error }}</small>
+            {% endfor %}
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">{{ form.password.label }}</label>
+            {{ form.password(class_="form-input", style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #ccc;") }}
+            {% for error in form.password.errors %}
+                <small style="color: red;">{{ error }}</small>
+            {% endfor %}
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label style="font-weight: 500;">
+                {{ form.remember_me() }} {{ form.remember_me.label.text }}
+            </label>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+            {{ form.submit(class_="btn", style="background-color: #1a73e8; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%;") }}
+        </div>
+
+        <p style="text-align: center;">
+            Forgot your password?
+            <a href="{{ url_for('reset_password_request') }}">Click to reset</a>
+        </p>
+
+        <p style="text-align: center;">
+            New here?
+            <a href="{{ url_for('register') }}">Click to Register</a>
+        </p>
+    </form>
+</div>
+{% endblock %}
