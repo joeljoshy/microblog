@@ -7,7 +7,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 80px);  /* Adjust based on your navbar height */
+    min-height: calc(100vh - 100px);
     padding-top: 56px;
     background-color: #f8f9fa;
 ">
@@ -19,45 +19,73 @@
         max-width: 400px;
         width: 100%;
     ">
-        <h2 style="text-align: center; margin-bottom: 1.5rem;">Welcome Back</h2>
+        <h2 style="text-align: center; margin-bottom: 1.5rem;">Welcome Back 👋</h2>
 
         {{ form.hidden_tag() }}
 
+        <!-- Email -->
         <div style="margin-bottom: 1.5rem;">
-            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">{{ form.email.label }}</label>
-            {{ form.email(class_="form-input", style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #ccc;") }}
+            <label style="font-weight: 600;">{{ form.email.label }}</label>
+            {{ form.email(class_="form-control", placeholder="you@example.com") }}
             {% for error in form.email.errors %}
                 <small style="color: red;">{{ error }}</small>
             {% endfor %}
         </div>
 
-        <div style="margin-bottom: 1.5rem;">
-            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">{{ form.password.label }}</label>
-            {{ form.password(class_="form-input", style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #ccc;") }}
+        <!-- Password with Toggle -->
+        <div style="margin-bottom: 1.5rem; position: relative;">
+            <label style="font-weight: 600;">{{ form.password.label }}</label>
+            {{ form.password(class_="form-control", id="password", placeholder="Enter password") }}
+            <button type="button" onclick="togglePassword()" style="
+                position: absolute;
+                right: 10px;
+                top: 38px;
+                background: none;
+                border: none;
+                cursor: pointer;
+            ">
+                👁️
+            </button>
             {% for error in form.password.errors %}
                 <small style="color: red;">{{ error }}</small>
             {% endfor %}
         </div>
 
-        <div style="margin-bottom: 1.5rem;">
-            <label style="font-weight: 500;">
-                {{ form.remember_me() }} {{ form.remember_me.label.text }}
-            </label>
+        <!-- Remember Me -->
+        <div class="form-check mb-3">
+            {{ form.remember_me(class_="form-check-input") }}
+            <label class="form-check-label">{{ form.remember_me.label.text }}</label>
         </div>
 
-        <div style="margin-bottom: 1rem;">
-            {{ form.submit(class_="btn", style="background-color: #1a73e8; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%;") }}
+        <!-- Submit -->
+        <div class="d-grid mb-3">
+            {{ form.submit(class_="btn btn-primary") }}
         </div>
 
-        <p style="text-align: center;">
-            Forgot your password?
-            <a href="{{ url_for('reset_password_request') }}">Click to reset</a>
+        <!-- Social Login (Example Google) -->
+        <div class="text-center mb-3">
+            <p>or login with</p>
+            <a href="" class="btn btn-outline-secondary w-100">
+                <img src="https://developers.google.com/identity/images/g-logo.png" width="20" class="me-2">
+                Sign in with Google
+            </a>
+        </div>
+
+        <!-- Links -->
+        <p class="text-center mb-1">
+            <a href="{{ url_for('reset_password_request') }}">Forgot your password?</a>
         </p>
-
-        <p style="text-align: center;">
-            New here?
-            <a href="{{ url_for('register') }}">Click to Register</a>
+        <p class="text-center">
+            New here? <a href="{{ url_for('register') }}">Click to register</a>
         </p>
     </form>
 </div>
+
+<!-- Password toggle script -->
+<script>
+function togglePassword() {
+    const input = document.getElementById('password');
+    input.type = input.type === 'password' ? 'text' : 'password';
+}
+</script>
 {% endblock %}

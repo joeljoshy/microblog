@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center min-vh-100 py-4" style="background-color: #f0f2f5;">
+    <div class="card-style w-100" style="max-width: 600px;">
+        <h2 class="text-center mb-4 fw-bold" style="color: #333;">
+            ✍️ Edit Your Post
+        </h2>
+
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold text-dark">
+                    {{ form.post.label }}
+                </label>
+                {{ form.post(rows=5, class_="form-control", style="resize: vertical; background-color: #fafafa;") }}
+
+                {% for error in form.post.errors %}
+                    <small class="text-danger">{{ error }}</small>
+                {% endfor %}
+            </div>
+
+            <div class="d-grid">
+                {{ form.submit(class_="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 
+{% block title %}Register{% endblock %}
+
 {% block content %}
 <div style="
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 80px);
+    min-height: calc(100vh - 100px);
     padding-top: 56px;
     background-color: #f8f9fa;
 ">
@@ -23,8 +25,8 @@
 
         {% for field in [form.username, form.email, form.password, form.password2] %}
             <div style="margin-bottom: 1.5rem;">
-                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">{{ field.label }}</label>
-                {{ field(class_="form-input", style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #ccc;") }}
+                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">{{ field.label.text }}</label>
+                {{ field(class_="form-control", placeholder=field.label.text) }}
                 {% for error in field.errors %}
                     <small style="color: red;">{{ error }}</small>
                 {% endfor %}
@@ -32,10 +34,12 @@
         {% endfor %}
 
         <div style="margin-bottom: 1.5rem;">
-            {{ form.submit(class_="btn", style="background-color: #1a73e8; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%;") }}
+            {{ form.submit(class_="btn btn-primary w-100") }}
         </div>
 
-        <p style="text-align: center;">Already have an account? <a href="{{ url_for('login') }}">Click to Login</a></p>
+        <p style="text-align: center;">Already have an account?
+            <a href="{{ url_for('login') }}">Click to Login</a>
+        </p>
     </form>
 </div>
 {% endblock %}

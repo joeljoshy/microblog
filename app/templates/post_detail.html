@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}{{ post.author.username }}'s Post{% endblock %}
+
+{% block content %}
+<style>
+    .post-text {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        color: #333;
+    }
+
+    .comment-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .comment-content {
+        flex: 1;
+    }
+
+    .comment-author {
+        font-weight: 600;
+        color: #1f2d3d;
+    }
+
+    .comment-timestamp {
+        font-size: 0.8rem;
+        color: #888;
+    }
+
+    .comment-body {
+        font-size: 0.95rem;
+        color: #2e2e2e;
+        margin-top: 0.25rem;
+    }
+
+    .rounded-card {
+        border-radius: 1rem;
+    }
+</style>
+
+<div class="container" style="max-width: 800px;">
+
+    <!-- Post Card -->
+    <div class="card shadow-sm border-0 rounded-card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="mb-0 text-dark fw-semibold">{{ post.author.username }}</h5>
+                <small class="text-muted">{{ post.timestamp.strftime('%b %d, %Y %I:%M %p') }}</small>
+            </div>
+            <p class="post-text">{{ post.body }}</p>
+
+            {% if current_user == post.author %}
+            <div class="mt-3 text-end">
+                <a href="{{ url_for('edit_post', post_id=post.id) }}" class="btn btn-outline-primary btn-sm">
+                    ✏️ Edit Post
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="card shadow-sm border-0 rounded-card mb-4">
+        <div class="card-body">
+            <h6 class="fw-semibold text-primary mb-3">💬 Comments ({{ post.comments|length }})</h6>
+
+            {% if post.comments %}
+                {% for comment in post.comments %}
+                    <div class="comment-box">
+                        <div class="comment-content">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="comment-author">{{ comment.author.username }}</span>
+                                <span class="comment-timestamp">{{ comment.timestamp.strftime('%b %d, %Y %I:%M %p') }}</span>
+                            </div>
+                            <p class="comment-body">{{ comment.body }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted fst-italic">No comments yet. Be the first to reply!</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Add Comment Form -->
+    {% if comment_form %}
+    <div class="card shadow-sm border-0 rounded-card mb-4">
+        <div class="card-body">
+            <h6 class="fw-semibold text-success mb-3">➕ Add a Comment</h6>
+            <form method="post">
+                {{ comment_form.hidden_tag() }}
+                <input type="hidden" name="comment_post_id" value="{{ post.id }}">
+                <div class="mb-3">
+                    {{ comment_form.body(class="form-control", rows=3, placeholder="Write your comment...") }}
+                    {% for error in comment_form.body.errors %}
+                        <small class="text-danger">{{ error }}</small>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-success">Post Comment</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="text-center">
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">← Back to Home</a>
+    </div>
+
+</div>
+{% endblock %}

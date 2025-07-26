@@ -1,30 +1,38 @@
-<div class="card mb-4 shadow-sm">
-    <div class="card-body">
-        <div class="d-flex align-items-center mb-3">
-            <img src="{{ post.author.avatar(36) }}" alt="{{ post.author.username }}"
-                 class="rounded-circle me-3" width="36" height="36">
-            <div>
-                <h6 class="mb-0 fw-semibold">
-                    <a href="{{ url_for('user', username=post.author.username) }}"
-                       class="text-decoration-none text-dark dark-mode-text-light">
-                        {{ post.author.username }}
-                    </a> said {{ moment(post.timestamp).fromNow() }}:
-                </h6>
-            </div>
-        </div>
+<!-- Custom Hover CSS -->
+<style>
+.card-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-        <p class="card-text fs-6">{{ post.body }}</p>
-    </div>
-    <div class="card-footer bg-transparent d-flex justify-content-between">
-        {% if current_user == post.author %}
-        <a href="" class="btn btn-sm btn-outline-secondary">
-            ✏️ Edit
-        </a>
-        {% else %}
-        <span></span>
-        {% endif %}
-        <a href="#" class="btn btn-sm btn-link text-muted">
-            💬 Comment
-        </a>
+.card-hover:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    background-color: #fdfdfd;
+}
+</style>
+
+<!-- Post Card -->
+<div class="card h-100 shadow-sm border-0 card-hover">
+    <div class="card-body d-flex flex-column">
+        <h6 class="card-title fw-semibold text-dark mb-1">
+            <a href="{{ url_for('user', username=post.author.username) }}"
+               class="text-decoration-none text-dark dark-mode-text-light">
+                {{ post.author.username }}
+            </a>
+        </h6>
+
+        <small class="text-muted mb-2">{{ post.timestamp.strftime('%b %d, %Y') }}</small>
+
+        <p class="card-text text-secondary flex-grow-1" style="font-size: 0.9rem;">
+            <a href="{{ url_for('post_details', post_id=post.id) }}"
+               class="text-decoration-none text-dark dark-mode-text-light">
+                {{ post.body|truncate(100) }}
+            </a>
+        </p>
+
+        <!-- Comment count -->
+        <p class="mt-auto text-primary small mb-0">
+            💬 {{ post.comments|length }} Comments
+        </p>
     </div>
 </div>

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Home - My Blog{% endblock %}
 {% block content %}
-<div class="container" style="max-width: 750px;">
+<div class="container" style="max-width: 1000px;">
 
     <!-- Welcome Message -->
     <h1 class="text-center fw-semibold mb-5" style="color: #2c3e50;">
@@ -16,7 +16,7 @@
             {{ form.hidden_tag() }}
             <div class="mb-3">
                 {{ form.post.label(class="form-label fw-semibold text-dark") }}
-                {{ form.post(class="form-control", rows=4) }}
+                {{ form.post(class="form-control", rows=4, placeholder="💬 Say something...") }}
             </div>
             <div>
                 {{ form.submit(class="btn btn-primary fw-semibold px-4") }}
@@ -25,24 +25,30 @@
     </div>
     {% endif %}
 
-    <!-- Posts Feed -->
+    <!-- Posts Grid -->
     {% if posts %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
         {% for post in posts %}
+        <div class="col">
             {% include '_post.html' %}
-        {% endfor %}
-
-        {% if prev_url or next_url %}
-        <div class="d-flex justify-content-center gap-3 mt-4">
-            {% if prev_url %}
-                <a href="{{ prev_url }}" class="btn btn-outline-secondary btn-sm">← Newer Posts</a>
-            {% endif %}
-            {% if next_url %}
-                <a href="{{ next_url }}" class="btn btn-outline-secondary btn-sm">Older Posts →</a>
-            {% endif %}
         </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if prev_url or next_url %}
+    <div class="d-flex justify-content-center gap-3 mt-4">
+        {% if prev_url %}
+            <a href="{{ prev_url }}" class="btn btn-outline-secondary btn-sm">← Newer Posts</a>
         {% endif %}
+        {% if next_url %}
+            <a href="{{ next_url }}" class="btn btn-outline-secondary btn-sm">Older Posts →</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
     {% else %}
-        <p class="text-center text-muted fst-italic mt-4">No posts yet. Start the conversation!</p>
+    <p class="text-center text-muted fst-italic mt-4">No posts yet. Start the conversation!</p>
     {% endif %}
 </div>
 {% endblock %}

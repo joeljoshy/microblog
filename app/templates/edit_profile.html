@@ -5,41 +5,90 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 80px);
-    padding-top: 56px;
-    background-color: #f8f9fa;
+    min-height: calc(100vh - 100px);
+    padding: 2rem 1rem;
+    background-color: #f0f2f5;
 ">
     <div style="
         max-width: 600px;
         width: 100%;
-        background: #fff;
-        border-radius: 12px;
+        background: #ffffff;
+        border-radius: 16px;
         padding: 2rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
     ">
-        <h2 style="text-align: center; margin-bottom: 2rem;">Edit Profile</h2>
+        <h2 style="
+            text-align: center;
+            margin-bottom: 1.8rem;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #333;
+        ">
+            👤 Edit Profile
+        </h2>
 
         <form method="post" novalidate>
             {{ form.hidden_tag() }}
 
+            <!-- Username Field -->
             <div style="margin-bottom: 1.5rem;">
-                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">{{ form.username.label }}</label>
-                {{ form.username(size=32, class_="form-input", style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #ccc;") }}
+                <label style="
+                    display: block;
+                    font-size: 0.95rem;
+                    font-weight: 600;
+                    margin-bottom: 0.5rem;
+                    color: #444;
+                ">{{ form.username.label }}</label>
+                {{ form.username(size=32, class_="form-input", style="
+                    width: 100%;
+                    padding: 0.85rem 1rem;
+                    font-size: 1rem;
+                    border: 1px solid #d1d1d1;
+                    border-radius: 10px;
+                    background-color: #fafafa;
+                ") }}
                 {% for error in form.username.errors %}
-                    <small style="color: red;">{{ error }}</small>
+                    <small style="color: #e63946; font-size: 0.85rem;">{{ error }}</small>
                 {% endfor %}
             </div>
 
+            <!-- About Me Field -->
             <div style="margin-bottom: 1.5rem;">
-                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">{{ form.about_me.label }}</label>
-                {{ form.about_me(rows=4, class_="form-input", style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #ccc; resize: vertical;") }}
+                <label style="
+                    display: block;
+                    font-size: 0.95rem;
+                    font-weight: 600;
+                    margin-bottom: 0.5rem;
+                    color: #444;
+                ">{{ form.about_me.label }}</label>
+                {{ form.about_me(rows=4, class_="form-input", style="
+                    width: 100%;
+                    padding: 0.85rem 1rem;
+                    font-size: 1rem;
+                    border: 1px solid #d1d1d1;
+                    border-radius: 10px;
+                    resize: vertical;
+                    background-color: #fafafa;
+                ") }}
                 {% for error in form.about_me.errors %}
-                    <small style="color: red;">{{ error }}</small>
+                    <small style="color: #e63946; font-size: 0.85rem;">{{ error }}</small>
                 {% endfor %}
             </div>
 
+            <!-- Submit Button -->
             <div>
-                {{ form.submit(class_="btn", style="background-color: #1a73e8; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%;") }}
+                {{ form.submit(class_="btn", style="
+                    width: 100%;
+                    background-color: #1a73e8;
+                    color: #ffffff;
+                    font-size: 1rem;
+                    padding: 0.9rem;
+                    border: none;
+                    border-radius: 10px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: background-color 0.2s ease-in-out;
+                ") }}
             </div>
         </form>
     </div>

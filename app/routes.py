@@ -10,8 +10,9 @@ from urllib.parse import urlsplit
 
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, \
-    EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm
-from app.models import User, Post
+    EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm, \
+    CommentForm
+from app.models import User, Post, Comment
 from app.utils import send_password_reset_email
 
 from config import Config
@@ -91,12 +92,13 @@ def user(username):
     page = request.args.get('page', 1, type=int)
     query = profile.posts.select().order_by(Post.timestamp.desc())
     posts = db.paginate(query, page=page, per_page=Config.POSTS_PER_PAGE,error_out=False)
+    post_count = posts.total
     next_url = url_for('user', username=profile.username, page=posts.next_num) \
         if posts.has_next else None
     prev_url = url_for('user', username=profile.username, page=posts.prev_num) \
         if posts.has_prev else None
     form = EmptyForm()
-    return render_template('user.html', user=profile, posts=posts.items, form=form, next_url=next_url, prev_url=prev_url)
+    return render_template('user.html', user=profile, posts=posts.items, form=form, next_url=next_url, prev_url=prev_url, post_count=post_count)
 
 
 @app.before_request
@@ -122,28 +124,41 @@ def edit_profile():
     return render_template('edit_profile.html', title='Edit Profile', form=form)
 
 
-import os
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail, Email
+@app.route('/edit_post/<post_id>', methods=['GET', "POST"])
+@login_required
+def edit_post(post_id):
+    form = PostForm()
+    post = db.session.scalar(sa.select(Post).where(Post.id == post_id))
+    if form.validate_on_submit():
+        if post is None:
+            flash("Post is expired!")
+            return redirect(url_for('index'))
+        if post.author != current_user:
+            flash("You are not authorized!")
+            return redirect(url_for('index'))
+        post.body = form.post.data
+        db.session.commit()
+        flash("Updated post")
+        return redirect(url_for('post_details', post_id=post.id))
+    if request.method == 'GET':
+        form.post.data = post.body
+    return render_template('edit_post.html', title='Edit Post', form=form)
 
 
-@app.route('/send-email')
-def send_email():
-    message = Mail(
-        from_email=Email(Config.MAIL_DEFAULT_SENDER, Config.MAIL_DEFAULT_SENDER_NAME),
-        to_emails=Config.SUPPORT_EMAIL,  # change to your email
-        subject='Test Email from Flask using SendGrid',
-        plain_text_content='Hello! This is a test email sent via SendGrid and Flask.')
-
-    try:
-        sg = SendGridAPIClient(Config.SENDGRID_API_KEY)
-        response = sg.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-        return f'Email sent! Status: {response.status_code}'
-    except Exception as e:
-        return str(e)
+@app.route('/post_details/<post_id>', methods=['GET', 'POST'])
+@login_required
+def post_details(post_id):
+    # form = PostForm()
+    post = db.session.scalar(sa.select(Post).where(Post.id == post_id))
+    comment_form = CommentForm()
+    if comment_form.validate_on_submit():
+        post_id = int(request.form['comment_post_id'])
+        comment = Comment(body=comment_form.body.data, author=current_user, post_id=post_id)
+        db.session.add(comment)
+        db.session.commit()
+        flash("Comment added")
+        return redirect(url_for('post_details',post_id=post.id ))
+    return render_template('post_detail.html', title='Post Details', post=post, comment_form=comment_form)
 
 
 @app.route('/follow/<username>',methods=['POST'])

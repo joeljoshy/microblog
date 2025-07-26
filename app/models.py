@@ -5,7 +5,7 @@ import jwt
 from sqlalchemy.util.langhelpers import repr_tuple_names
 
 from werkzeug.security import generate_password_hash, check_password_hash
-from typing import Optional
+from typing import Optional, List
 from flask_login import UserMixin
 from hashlib import md5
 
@@ -45,6 +45,10 @@ class User(UserMixin, db.Model):
         secondary=followers, primaryjoin=(followers.c.followed_id == id),
         secondaryjoin=(followers.c.follower_id == id),
         back_populates='following'
+    )
+
+    comments: so.Mapped[List["Comment"]] = so.relationship(
+        back_populates='author', cascade='all, delete-orphan'
     )
 
     def __repr__(self):
@@ -122,6 +126,10 @@ class Post(db.Model):
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
     author: so.Mapped[User] = so.relationship(back_populates='posts')
 
+    comments: so.Mapped[List["Comment"]] = so.relationship(
+        back_populates='post', cascade='all, delete-orphan'
+    )
+
     def __repr__(self):
         return '<Post {}>'.format(self.body)
 
@@ -129,3 +137,22 @@ class Post(db.Model):
 @login.user_loader
 def load_user(id):
     return db.session.get(User, int(id))
+
+
+class Comment(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    body: so.Mapped[str] = so.mapped_column(sa.String(280), nullable=False)
+    timestamp: so.Mapped[datetime] = so.mapped_column(
+        index=True, default=lambda: datetime.now(timezone.utc)
+    )
+
+    # FK
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
+    post_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Post.id), index=True)
+
+    # Relationship
+    author: so.Mapped["User"] = so.relationship(back_populates="comments")
+    post: so.Mapped["Post"] = so.relationship(back_populates="comments")
+
+    def __repr__(self):
+        return '<Comment {}>'.format(self.body[:20])
