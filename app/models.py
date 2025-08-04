@@ -51,6 +51,8 @@ class User(UserMixin, db.Model):
         back_populates='author', cascade='all, delete-orphan'
     )
 
+    mobile: so.Mapped[str] = so.mapped_column(sa.String(20), unique=True, index=True, nullable=True)
+
     def __repr__(self):
         return '<User {}>'.format(self.username)
 

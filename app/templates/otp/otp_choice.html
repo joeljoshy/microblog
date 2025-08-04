@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Login via OTP{% endblock %}
+{% block content %}
+
+<div class="otp-box">
+  <h2>Login via OTP</h2>
+  <form method="POST" action="{{ url_for('send_otp') }}">
+    <div class="radio-group">
+      <label><input type="radio" name="method" value="email" checked> Email</label>
+      <label><input type="radio" name="method" value="mobile"> Mobile</label>
+    </div>
+
+    <input type="text" name="contact" placeholder="Enter your email or mobile number" class="input-field" required>
+
+    <button type="submit">Send OTP</button>
+  </form>
+</div>
+
+<style>
+  .otp-box {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    margin: 5% auto;
+    text-align: center;
+  }
+
+  h2 {
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+
+  .radio-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 1rem;
+  }
+
+  input[type="text"].input-field {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    background-color: #6c5ce7;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  button:hover {
+    background-color: #5a4bd8;
+  }
+</style>
+
+{% endblock %}

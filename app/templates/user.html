@@ -21,6 +21,9 @@
         {% if user.last_seen %}
         <p class="small text-muted">Last seen: {{ moment(user.last_seen).format('LLL') }}</p>
         {% endif %}
+        {% if user.mobile%}
+        <p class="small text-muted">Mobile: {{ user.mobile }}</p>
+        {% endif %}
 
         <!-- Stats -->
         <div class="d-flex justify-content-center gap-4 my-3">

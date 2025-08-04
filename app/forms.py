@@ -1,3 +1,5 @@
+import phonenumbers
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, URL, Email, EqualTo, ValidationError, Length
@@ -14,6 +16,15 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Log In")
 
 
+def validate_mobile(form, field):
+    try:
+        number = phonenumbers.parse(field.data, None)
+        if not phonenumbers.is_valid_number(number):
+            raise ValidationError("Invalid mobile number.")
+    except phonenumbers.NumberParseException:
+        raise ValidationError("Invalid mobile number.")
+
+
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -21,6 +32,7 @@ class RegistrationForm(FlaskForm):
     password2 = PasswordField(
         'Repeat Password', validators=[DataRequired(), EqualTo('password')]
     )
+    mobile = StringField('Mobile', validators=[DataRequired(), validate_mobile])
     submit = SubmitField('Register')
 
     def validate_username(self, username):
