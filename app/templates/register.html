@@ -23,7 +23,7 @@
 
         {{ form.hidden_tag() }}
 
-        {% for field in [form.username, form.email, form.password, form.password2] %}
+        {% for field in [form.username, form.email, form.password, form.password2, form.mobile] %}
             <div style="margin-bottom: 1.5rem;">
                 <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">{{ field.label.text }}</label>
                 {{ field(class_="form-control", placeholder=field.label.text) }}

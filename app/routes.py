@@ -1,8 +1,9 @@
 from datetime import datetime, timezone
+from random import randint
 
 import sqlalchemy as sa
 
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, session
 from flask_login import login_user, current_user, logout_user, login_required
 from flask import request
 from urllib.parse import urlsplit
@@ -13,7 +14,8 @@ from app.forms import LoginForm, RegistrationForm, EditProfileForm, \
     EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm, \
     CommentForm
 from app.models import User, Post, Comment
-from app.utils import send_password_reset_email
+from app.utils import send_password_reset_email, send_email_otp, \
+    send_sms_otp
 
 from config import Config
 
@@ -76,7 +78,7 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
+        user = User(username=form.username.data, email=form.email.data, mobile=form.mobile.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -252,3 +254,50 @@ def reset_password(token):
         flash('Your password has been reset.')
         return redirect(url_for('login'))
     return render_template('email/reset.html', form=form)
+
+
+@app.route('/otp-login')
+def otp_login():
+    return render_template('otp/otp_choice.html')
+
+
+@app.route('/send_otp', methods=['POST'])
+def send_otp():
+    method = request.form['method']
+    contact = request.form['contact']
+    otp = str(randint(100000, 999999))
+
+    session['otp'] = otp
+    session['contact'] = contact
+    session['method'] = method
+
+    if method == 'email':
+        user = User.query.filter_by(email=contact).first()
+        if not user:
+            flash("User not found")
+            return redirect(url_for("otp_login"))
+        send_email_otp(contact, otp)
+        flash("OTP sent to your email")
+    elif method == 'mobile':
+        user = User.query.filter_by(mobile=contact).first()
+        if not user:
+            flash("User not found")
+            return redirect(url_for("otp_login"))
+        send_sms_otp(contact, otp)
+
+    return redirect(url_for("verify_otp"))
+
+
+@app.route('/verify_otp', methods=['GET', 'POST'])
+def verify_otp():
+    if request.method == 'POST':
+        user_otp = request.form['otp']
+        if user_otp == session['otp']:
+            contact = session.get('contact')
+            user = (User.query.filter_by(email=contact).first() or User.query.filter_by(mobile=contact).first())
+            login_user(user)
+            flash("OTP verified successfully!", "success")
+            return redirect(url_for('index'))
+        else:
+            flash("Invalid OTP. Please try again.", "danger")
+    return render_template('otp/verify_otp.html')

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify OTP{% endblock %}
+
+{% block content %}
+<div class="otp-box">
+  <h2>Enter OTP</h2>
+  <form method="POST">
+    <input type="text" name="otp" placeholder="Enter 6-digit OTP" required>
+    <button type="submit">Verify</button>
+  </form>
+  <div class="info-text">
+    An OTP was sent to your {{ session['method'] }}: {{ session['contact'] }}
+  </div>
+</div>
+
+<style>
+  .otp-box {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    margin: 5% auto;
+    text-align: center;
+  }
+
+  h2 {
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    background-color: #6c5ce7;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  button:hover {
+    background-color: #5a4bd8;
+  }
+
+  .info-text {
+    color: #777;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+  }
+</style>
+{% endblock %}

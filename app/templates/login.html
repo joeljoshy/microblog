@@ -64,12 +64,19 @@
 
         <!-- Social Login (Example Google) -->
         <div class="text-center mb-3">
-            <p>or login with</p>
+<!--            <p>or login with</p>-->
             <a href="" class="btn btn-outline-secondary w-100">
                 <img src="https://developers.google.com/identity/images/g-logo.png" width="20" class="me-2">
                 Sign in with Google
             </a>
         </div>
+<!--        <p style="text-align: center; margin: 20px 0;">or</p>-->
+        <a href="{{ url_for('otp_login') }}">
+            <button type="button"
+                    style="width: 100%; padding: 10px; background: #6c5ce7; color: white; border: none; border-radius: 5px;">
+                Login with OTP
+            </button>
+        </a>
 
         <!-- Links -->
         <p class="text-center mb-1">
