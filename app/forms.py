@@ -83,6 +83,10 @@ class ResetPasswordForm(FlaskForm):
     password2 = PasswordField("Repeat Password", validators=[DataRequired()])
     submit = SubmitField("Request Password Reset")
 
+    def validate_password(self, password):
+        if password.data != self.password2.data:
+            raise ValidationError('Passwords must match.')
+
 
 class CommentForm(FlaskForm):
     body = TextAreaField('Add Comment', validators=[DataRequired(), Length(min=1, max=280)])
